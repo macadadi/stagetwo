@@ -1,0 +1,32 @@
+version: "3.8"
+services:
+  psdatabase:
+    container_name: full_db_postgres
+    image: postgres:14.1-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=eshop
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=eshop_backend
+    ports:
+      - '5432:5432'
+    volumes:
+      - psdatabase:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin_container
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: password
+    depends_on:
+      - psdatabase
+    ports:
+      - "5050:80"
+    # networks:
+    #   - psdatabasep
+    restart: unless-stopped
+
+volumes:
+  psdatabase:
+  pgadmin:
