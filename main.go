@@ -37,6 +37,6 @@ func main(){
 		Addr: Port,
 		Handler: route,
 	}
-	fmt.Printf("starting server on port %s", Port)
+	fmt.Printf("starting server on port %s \n", Port)
 	log.Fatal(server.ListenAndServe())
 }

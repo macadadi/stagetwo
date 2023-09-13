@@ -3,7 +3,7 @@ package repository
 import (
 	"context"
 	"errors"
-
+	"fmt"
 	"macadadi/stagetwo/db"
 	"macadadi/stagetwo/form"
 	"macadadi/stagetwo/model"
@@ -13,9 +13,9 @@ const (
 	Adduser     = "INSERT INTO users (name) VALUES ($1)"
 	getAllUsers = "SELECT id, name  FROM users"
 	// Add the following
-	deleteProduct = "DELETE * FROM users WHERE id= $1"
-	findById      = getAllUsers + " WHERE id= $1"
-	updateProduct = "UPDATE users SET name = $1 WHERE id =$2"
+	deleteuser = "DELETE FROM users WHERE id= $1"
+	findById   = getAllUsers + " WHERE id= $1"
+	updateUser = "UPDATE users SET name = $1 WHERE id =$2"
 )
 
 type (
@@ -23,7 +23,7 @@ type (
 		AddUser(ctx context.Context, db db.DB, form *form.User) error
 		GetAllUsers(ctx context.Context, db db.DB) ([]*model.User, error)
 		UpdateUser(ctx context.Context, db db.DB, form *form.User) error
-		DeleteUser(ctx context.Context, db db.DB, form *form.User) error
+		DeleteUser(ctx context.Context, db db.DB, id int64) error
 		FindUserByID(ctx context.Context, db db.DB, id int64) (*model.User, error)
 	}
 	UserRepository struct{}
@@ -63,7 +63,7 @@ func (s *UserRepository) GetAllUsers(ctx context.Context, db db.DB) ([]*model.Us
 	return users, nil
 }
 
-func (s *UserRepository) FindUserByID(ctx context.Context, db db.DB, id string) (*model.User, error) {
+func (s *UserRepository) FindUserByID(ctx context.Context, db db.DB, id int64) (*model.User, error) {
 	var user model.User
 	row := db.QueryRowContext(ctx, findById, id)
 	err := row.Scan(
@@ -76,30 +76,31 @@ func (s *UserRepository) FindUserByID(ctx context.Context, db db.DB, id string) 
 	return &user, nil
 }
 
-func (s *UserRepository) DeleteProduct(ctx context.Context, db db.DB, id string) error {
+func (s *UserRepository) DeleteUser(ctx context.Context, db db.DB, id int64) error {
+
 	_, err := s.FindUserByID(ctx, db, id)
 
 	if err != nil {
-		return errors.New("procuct could not be found")
+		fmt.Print(err.Error(), "we got this error", id, "cur id")
+		return errors.New("User could not be found")
 	}
-	_, err = db.ExecContext(ctx, deleteProduct, id)
+	_, err = db.ExecContext(ctx, deleteuser, id)
 	if err != nil {
-		return errors.New("something went wrong")
+		return errors.New(err.Error())
 	}
 	return nil
 }
 
-func (s *UserRepository) UpdateProduct(ctx context.Context, db db.DB, form *form.User) (*model.User, error) {
-
-	_, err := db.ExecContext(ctx, updateProduct, form.Name, form.Id)
+func (s *UserRepository) UpdateUser(ctx context.Context, db db.DB, form *form.User) (*model.User, error) {
+	_, err := db.ExecContext(ctx, updateUser, form.Name, form.Id)
 	if err != nil {
-		return &model.User{}, errors.New("could not update product")
+		return &model.User{}, errors.New("could not update user")
 	}
-	product, err := s.FindUserByID(ctx, db, form.Id)
+	user, err := s.FindUserByID(ctx, db, form.Id)
 
 	if err != nil {
-		return &model.User{}, errors.New("could not find product")
+		return &model.User{}, errors.New("could not find user")
 	}
-	return product, nil
+	return user, nil
 
 }
