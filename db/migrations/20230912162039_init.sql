@@ -1,9 +1,13 @@
 -- +goose Up
--- +goose StatementBegin
-SELECT 'up SQL query';
--- +goose StatementEnd
+
+CREATE TABLE "users" (
+  "id" bigserial PRIMARY KEY,
+  "name" varchar,
+  "created_at" timestamptz
+);
+
+
+
 
 -- +goose Down
--- +goose StatementBegin
-SELECT 'down SQL query';
--- +goose StatementEnd
+DROP TABLE IF EXISTS users;

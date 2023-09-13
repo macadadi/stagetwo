@@ -1,30 +1,42 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 
+	"macadadi/stagetwo/db"
+	"macadadi/stagetwo/repository"
+	"macadadi/stagetwo/resources/user"
+	"macadadi/stagetwo/services"
+
 	"github.com/gin-gonic/gin"
-	"github.com/joho/godotenv"
 )
+const Port =":3001"
+func main(){
 
-func init() {
-	// loads values from .env into the system
-	if err := godotenv.Load(); err != nil {
-		log.Print("sad .env file found")
-	}
-}
+   	db:= db.InitDB()
+	defer db.Close()
 
-func main() {
-	r := gin.Default()
+	route := gin.New()
+	route.Use(gin.Logger())
 
-	r.GET("/user", userInfo)
 
-	r.Run(":8080")
-}
 
-func userInfo(c *gin.Context) {
-	c.JSON(http.StatusAccepted, gin.H{
-		"message": "user created at this time",
+	userRepo := repository.NewUserRepository()
+
+	userService := services.NewUserService(userRepo)
+
+	user.Endpoints(route,db,userService)
+
+	route.NoRoute(func(ctx *gin.Context) {
+		ctx.IndentedJSON(http.StatusNotFound,gin.H{"err_message":"end point not found try again later "})
 	})
+
+	server := http.Server{
+		Addr: Port,
+		Handler: route,
+	}
+	fmt.Printf("starting server on port %s", Port)
+	log.Fatal(server.ListenAndServe())
 }

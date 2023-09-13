@@ -7,6 +7,6 @@ import(
 )
 
 func Endpoints(route *gin.Engine, db db.DB, s *services.UserService){
-	route.GET("/product",AddUser(db,s))
-
+	route.POST("/api",AddUser(db,s))
+	route.GET("/api",GetAllUsers(db,s))
 }

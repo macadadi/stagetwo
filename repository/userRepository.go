@@ -9,8 +9,8 @@ import (
 )
 
 const(
-        Adduser = "INSERT INTO users (full_name,created_at,country_code) VALUES ($1,$2,$3)"
-		getAllUsers = "SELECT id, full_name,country_code,created_at FROM users"
+        Adduser = "INSERT INTO users (name) VALUES ($1)"
+		getAllUsers = "SELECT id, name  FROM users"
 )
 
 type(
