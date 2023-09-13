@@ -1,6 +1,6 @@
 include .env
 server:
-	gow run main.go
+	wgo run main.go
 up:
 	docker-compose -f docker-compose.yml up 
 down:
