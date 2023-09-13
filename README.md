@@ -35,7 +35,28 @@ The application has the following end points
 
 ### `GET /api` this lists all the users
 
+```JSON
+[
+    {
+        "id": 1,
+        "name": "Better Tester"
+    },
+    {
+        "id": 2,
+        "name": "John Doe"
+    }
+]
+```
+
 ### `GET /api/user_id` this lists  a single user with the given id or returns an empty object if not found
+
+```JSON
+    {
+        "id": 2,
+        "name": "John Doe"
+    }
+
+```
 
 ### `PUT /api/user_id` updates  user with the given id
 
