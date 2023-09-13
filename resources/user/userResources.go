@@ -45,7 +45,7 @@ func GetAllUsers(db db.DB, s *services.UserService) func(c *gin.Context) {
 func FindUserById(db db.DB, s *services.UserService) func(c *gin.Context) {
 	return func(c *gin.Context) {
 		ctx := c.Request.Context()
-		id, _ := strconv.ParseInt(c.Param("id"), 0, 64)
+		id, _ := strconv.ParseInt(c.Param("user_id"), 0, 64)
 		users, err := s.FindUserByID(ctx, db, id)
 
 		if err != nil {
