@@ -1,6 +1,6 @@
 package form
 
 type User struct{
-	Id string `json:"name" binding:"required"`
+	Id string `json:"id" binding:"required"`
 	Name string `json:"name" binding:"required"`
 }
